@@ -1,0 +1,26 @@
+```{r}
+library(lattice)
+xyplot(log(Max)~log(CL), groups=Headstart, col=c("red","blue"), type=c("p","r"), xlab="Log Carapace Length (mm)", ylab="Log Max Bite Force (N)", data=terrapin.all)
+```
+```{r}
+lm.terrapin<-lm(log(Max)~log(CL)+Headstart+log(CW), data=terrapin.all)
+summary(lm.terrapin)
+plot(lm.terrapin)
+```
+```{r}
+Boxplot(Max~Headstart, data=cl.range)
+```
+
+```{r}
+nested<- aov(log(Max)~Headstart, data=cl.range)
+summary(nested)
+```
+```{r}
+nested2<- aov(log(Max)~Headstart + log(CL) + log(HW), data=cl.range)
+summary(nested2)
+```
+```{r}
+nested3<- aov(log(Max)~Headstart * log(CL) * log(HW), data=cl.range)
+summary(nested3)
+```
+
