@@ -11,11 +11,11 @@ xyplot(BFLog~AgeCaught, groups=Type, type= c("a"), xlab="Age", ylab="Log BF", da
 ```
 
 ```{r}
-p1 <- ggplot(age, aes(x=age$AgeCaught, y=age$BFLog, color=Type)) + scale_color_manual(values=c('#FF0000','#FF0000', '#0000FF'))+ geom_point()+  geom_smooth(method="auto",) + xlab("Age")+ ylab("Log Bite Force (N)") + scale_x_continuous(limits=c(0, 15)) + theme_bw() 
+p1 <- ggplot(age, aes(x=age$AgeCaught, y=age$BFLog, color=Type)) + scale_color_manual(values=c('#FF0000', '#0000FF'))+ geom_point()+  geom_smooth(method="auto",) + xlab("Age")+ ylab("Log Bite Force (N)") + scale_x_continuous(limits=c(0, 15)) + theme_bw() 
 p1
 ```
 ```{r}
-p1 <- ggplot(age, aes(x=age$AgeCaught, y=age$BFLog, color=Type)) + scale_color_manual(values=c('#FF0000','#FF0000', '#0000FF'))+ geom_point()+  geom_smooth(method='loess',) + xlab("Age")+ ylab("Log Bite Force (N)") + scale_x_continuous(limits=c(0, 15)) + theme_bw() 
+p1 <- ggplot(age, aes(x=age$AgeCaught, y=age$BFLog, color=Type)) + scale_color_manual(values=c('#FF0000','#0000FF'))+ geom_point()+  geom_smooth(method='loess',) + xlab("Age")+ ylab("Log Bite Force (N)") + scale_x_continuous(limits=c(0, 15)) + theme_bw() 
 p1
 ```
 
