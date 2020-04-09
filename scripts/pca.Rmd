@@ -6,7 +6,7 @@ output: html_document
 setwd("~/Documents/Terrapins/data")
 headstart = read.csv("terrapin-cl(86-117).csv")
 ```
-
+rda with body measurements 
 ```{r}
 library(vegan)
 library(factoextra)
@@ -15,30 +15,41 @@ rda_b = rda(headstart[ , c('CL', 'PL', 'CH' , 'CW' , 'RP')] ~ Headstart, data=he
 predict(rda_b, headstart)
 plot(rda_b, display=c('cn', 'sp'))
 ```
+significance of model 
 ```{r}
 anova(rda_b)
 ```
 ```{r}
+setwd("~/Documents/Terrapins/data")
 age<-read.csv("analysis-F&J.csv")
 ```
+add age into model 
 ```{r}
 rda_a = rda(age[ , c('CL', 'PL', 'RP', 'WD', 'HT')] ~ Type, data=age, na.omit = T)
 predict(rda_a, age)
 plot(rda_a, display=c('cn', 'sp'))
-##compute r squared
 ```
+compute r squared
+```{r}
+RsquareAdj(rda_a)
+```
+
+signifiance of model 
 ```{r}
 anova(rda_a)
 ```
+rda with bite force and age 
 ```{r}
 rda_p = rda(age[ , c('BFLog')] ~ Type, data=age, na.omit = T)
 predict(rda_p, age)
 plot(rda_p, display=c('cn', 'sp'))
 ```
+pca with age 
 ```{r}
 age.pca <- PCA(age[ , c('CL', 'PL', 'RP', 'WD', 'HT', 'HW')], graph = FALSE)
 summary(age.pca)
 ```
+pca of age (not scaled)
 ```{r}
 fviz_pca_ind(age.pca,
              geom.ind = "point", # show points only (nbut not "text")
@@ -49,6 +60,20 @@ fviz_pca_ind(age.pca,
              )
 
 #scale variables to unitless and include age 
+```
+```{r}
+##with bf, scale, age
+age.pca.bf <- PCA(age[ , c('CL', 'PL', 'RP', 'WD', 'HT', 'HW', 'BFLog', 'AgeCaught')], graph = FALSE, scale=TRUE)
+summary(age.pca.bf)
+```
+```{r}
+fviz_pca_ind(age.pca.bf,
+             geom.ind = "point", # show points only (nbut not "text")
+             col.ind = age$Type, # color by groups
+             palette = c("#00AFBB", "#E7B800"),
+             addEllipses = TRUE, # Concentration ellipses
+             legend.title = "Groups"
+             )
 ```
 
 
