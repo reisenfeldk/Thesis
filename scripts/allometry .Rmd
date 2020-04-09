@@ -3,57 +3,69 @@ setwd("~/Documents/Terrapins/data")
 library(car)
 library(plot3D)
 library(lattice)
-terrapin.all<-read.csv("terrapin-all-r.csv")
-terrapin.all
-lm.terrapin<-lm(log(Max)~log(CL)+Headstart+log(CL)*Headstart, data=terrapin.all)
-summary(lm.terrapin)
-plot(lm.terrapin)
 ```
+```{r}
+setwd("~/Documents/Terrapins/data")
+terrapin.all<-read.csv("terrapin-all-r.csv")
+```
+step-wise regression to see best indicators of bite force
+```{r}
+step(lm(log(Max)~log(CL)+log(HW)+log(HH)+log(CW)+Headstart,data=terrapin.all),direction="backward")
+best<-lm(log(Max) ~ log(CL) + log(HW), data=terrapin.all)
+summary(best)
+##Head width and carpaace length are best indicators of bite force 
+```
+relationship between HW and CL
+```{r}
+xyplot(log(CL)~log(HW), groups=Headstart, type=c("p","r"), xlab="Log Head Width (mm)", ylab="Log Carapace Length (mm)", col=c("blue", "red"), data=terrapin.all)
+```
+significance for above figure 
+```{r}
+lm.terrapin.HW.CL<-lm(log(CL)~log(HW)+Headstart+log(HW)*Headstart, data=terrapin.all)
+summary(lm.terrapin.HW.CL)
+plot(lm.terrapin.HW.CL)
+Anova(lm.terrapin.HW.CL, type=3)
+```
+relationship between CL and bite
 ```{r}
 xyplot(log(Max)~log(CL), groups=Headstart, col=c("red","blue"), type=c("p","r"), xlab="Log Carapace Length (mm)", ylab="Log Max Bite Force (N)", data=terrapin.all)
 dev.print(pdf, "carapace-all.pdf")
 ##headstarts are red and wild are blue
 ```
+range of individuals 86-117mm carapace length.  range determined by largest headstart (117mm) and smallest wild (86mm).  used to examine approximate size of individuals at time of release
 ```{r}
-##range of individuals 86-117mm carapace length.  range determined by largest headstart (117mm) and smallest wild (86mm)
 setwd("~/Documents/Terrapins/data")
 cl.range<-read.csv("terrapin-cl(86-117).csv")
 xyplot(log(Max)~log(CL), groups=Headstart, type=c("p","r"), xlab="Log Carapace Length (mm)", ylab="Log Max Bite Force (N)", col=c("blue","red"), data=cl.range)
 dev.print(pdf, "carapace-range.pdf")
 ```
+significance for above figure 
 ```{r}
-##significance for above figure  
 lm.terrapin.CL<-lm(log(Max)~log(CL)+Headstart+log(CL)*Headstart, data=cl.range)
 summary(lm.terrapin.CL)
 plot(lm.terrapin.CL)
 Anova(lm.terrapin.CL, type=3)
 ```
+relationship between HW and bite
 ```{r}
-##same for HW
 xyplot(log(Max)~log(HW), groups=Headstart, type=c("p","r"), xlab="Log Head Width (mm)", ylab="Log Max Bite Force (N)", col=c("blue", "red"), data=terrapin.all)
 dev.print(pdf, "hw-all.pdf")
 ```
+range of individuals 16.5-23mm head width.  range determined by largest headstart (23mm) and smallest wild (16.5mm).  used to examine approximate size of individuals at time of release
 ```{r}
 setwd("~/Documents/Terrapins/data")
 hw.range<-read.csv("terrapin-hw(16.5-23).csv")
 xyplot(log(Max)~log(HW), groups=Headstart, type=c("p","r"), xlab="Log Head Width (mm)", ylab="Log Max Bite Force (N)", col=c("blue", "red"), data=hw.range)
 dev.print(pdf, "hw-range.pdf")
 ```
+significance for above figure 
 ```{r}
-##significance for above figure  
 lm.terrapin.HW<-lm(log(Max)~log(HW)+Headstart+log(HW)*Headstart, data=hw.range)
 summary(lm.terrapin.HW)
 plot(lm.terrapin.HW)
 Anova(lm.terrapin.HW, type=3)
 ```
-
-```{r}
-##need to do step-wise regression to see if best indicators of bite force
-step(lm(log(Max)~log(CL)+log(HW)+log(HH)+log(CW),data=terrapin.all),direction="backward")
-best<-lm(log(Max) ~ log(CL) + log(HW), data=terrapin.all)
-summary(best)
-##add headstart 
-```
+Predict bite force from HW and CL
 ```{r}
 setwd("~/Documents/Terrapins/data")
 biters<-read.csv("terrapin-biters.csv")
@@ -62,6 +74,8 @@ y <- cl <- log(biters$CL)
 z <- max <- log(biters$Max)
 scatter3D(x, y, z, phi = 20, theta=20, pch=1, bty ="g", xlab="Head Width (mm)", ylab="Carapace Length (mm)",zlab="Bite Force (N)")
 ```
+add gridlines to make it easier to read
+
 ```{r}
 fit <- lm(z ~ x + y)
 grid.lines = 26
@@ -78,24 +92,7 @@ scatter3D(x, y, z, pch = 21, cex=1,
     facets = NA, fit = fitpoints))
 dev.print(pdf, "surfaceplot.pdf")
 ```
-```{r}
-xyplot(log(CL)~log(HW), groups=Headstart, type=c("p","r"), xlab="Log Head Width (mm)", ylab="Log Carapace Length (mm)", col=c("blue", "red"), data=terrapin.all)
-```
-```{r}
-lm.terrapin.HW.CL<-lm(log(CL)~log(HW)+Headstart+log(HW)*Headstart, data=terrapin.all)
-summary(lm.terrapin.HW.CL)
-plot(lm.terrapin.HW.CL)
-Anova(lm.terrapin.HW.CL, type=3)
-```
-```{r}
-xyplot(log(CL)~log(HW), groups=Headstart, type=c("p","r"), xlab="Log Head Width (mm)", ylab="Log Carapace Length (mm)", col=c("blue", "red"), data=cl.range)
-```
-```{r}
-lm.HW.CL<-lm(log(CL)~log(HW)+Headstart+log(HW)*Headstart, data=cl.range)
-summary(lm.HW.CL)
-plot(lm.HW.CL)
-Anova(lm.HW.CL, type=3)
-```
+
 
 
 
